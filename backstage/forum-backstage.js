@@ -28,6 +28,10 @@ const getPreviousDate = () => {
   return previousDate;
 };
 
+/* 
+  FOR LOCAL DEVELOPMENT: 
+     async function jira() { 
+*/
 export const handler = async (event) => {
   console.log("Generating Status Report");
 
@@ -228,3 +232,9 @@ export const handler = async (event) => {
     };
   }
 };
+
+/* FOR LOCAL DEVELOPMENT:
+
+jira();
+
+*/
