@@ -124,6 +124,10 @@ export const handler = async (event) => {
     hac_bugs +
     `\n5. <https://issues.redhat.com/issues/?filter=12396778 | Triaged Bugs> (${count})`;
 
+  count = await fetchCount('https://issues.redhat.com/rest/api/2/search?jql=filter=12426879')
+
+  hac_bugs = hac_bugs + `\n6. <https://issues.redhat.com/issues/?filter=12426879 | Release pending bugs> (${count})`
+
   console.log("Fetching RHTAP bugs SLI data");
 
   let rhtap_blockers = "\n\n *RHTAP Blocker bugs:*";
