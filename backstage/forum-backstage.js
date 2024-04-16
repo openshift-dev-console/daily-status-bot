@@ -106,6 +106,22 @@ export const handler = async (event) => {
     github_data_c +
     `\n<https://github.com/search?q=repo:${repoName}+state:open+type:pr+created%3A%3C${previousDate}&type=Issues | PRs opened for more than a week>:  ${count}`;
 
+   /* redhat-developer/red-hat-developers-documentation-rhdh */
+  repoName = "redhat-developer/red-hat-developers-documentation-rhdh";
+
+  count = await fetchCount(
+    `https://api.github.com/search/issues?q=repo:${repoName}+state%3Aopen+type%3Apr`,
+    true
+  );
+  let github_data_e = `\n<https://github.com/search?q=repo:${repoName}+state%3Aopen+type%3Apr | Total open PRs>:  ${count}`;
+
+  apiURL = `https://api.github.com/search/issues?q=repo:${repoName}+state:open+type:pr+created:<${previousDate}&type=Issues`;
+
+  count = await fetchCount(apiURL, true);
+  github_data_e =
+    github_data_e +
+    `\n<https://github.com/search?q=repo:${repoName}+state:open+type:pr+created%3A%3C${previousDate}&type=Issues | PRs opened for more than a week>:  ${count}`;
+
   console.log("Posting on #forum-backstage slack channel");
 
   const data = JSON.stringify({
@@ -196,6 +212,27 @@ export const handler = async (event) => {
           {
             type: "mrkdwn",
             text: github_data_d,
+          },
+        ],
+      },
+      {
+        type: "divider",
+      },
+       {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: "*red-hat-developers-documentation-rhdh*",
+          },
+        ],
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: github_data_e,
           },
         ],
       },
