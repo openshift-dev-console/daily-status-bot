@@ -4,7 +4,7 @@ echo "Generating Status Report"
 
 head="\nBackstage GitHub Status"
 
-PREVIOUS_DT=`date -v -7d "+%F"`
+PREVIOUS_DT=`date -d "7 days ago" +%F`
 
 echo "Fetching Github datas"
 
@@ -88,7 +88,7 @@ data='{
             "fields": [
                 {
                     "type": 'mrkdwn',
-                    "text": '*operator*'
+                    "text": '*backstage-operator*'
                    
                 }
             ]
