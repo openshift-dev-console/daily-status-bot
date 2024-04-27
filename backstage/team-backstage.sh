@@ -6,7 +6,7 @@ head="\nBackstage GitHub Status"
 
 PREVIOUS_DT=`date -v -7d "+%F"`
 
-echo "Fetching Github data"
+echo "Fetching Github datas"
 
 url1="https://api.github.com/search/issues?q=repo%3Ajanus-idp%2Fbackstage-showcase+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT&type=Issues"
 url2="https://api.github.com/search/issues?q=repo%3Ajanus-idp%2Fbackstage-plugins+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT&type=Issues"
