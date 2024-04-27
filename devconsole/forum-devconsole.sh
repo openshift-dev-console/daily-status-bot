@@ -104,7 +104,7 @@ data='{
 				"text": "'$head'"
 			}
 		},
-        		{
+        {
 			"type": "section",
 			"fields": [
 				{
@@ -129,7 +129,7 @@ data='{
 				}
 			]
 		},
-                {
+        {
             "type":"divider",
         },
         {

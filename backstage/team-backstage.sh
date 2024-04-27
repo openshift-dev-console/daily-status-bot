@@ -32,122 +32,121 @@ github_data_e+="\n<https://github.com/search?q=repo%3Aredhat-developer%2Fred-hat
 echo "Posting on slack"
 
 data='{
-    "text": 'GitHub Status report',
-    "blocks": [
+  "text": "GitHub Status report",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "'$head'"
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'header',
-            "text": {
-                "type": 'plain_text',
-                "text": head
-            }
-        },
+          "type": "mrkdwn",
+          "text": "*backstage-showcase*"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": '*backstage-showcase*'
-                }
-            ]
-        },
+          "type": "mrkdwn",
+          "text": "'$github_data_a'"
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": "'$github_data_a'"
-                },
-            ]
-        },
+          "type": "mrkdwn",
+          "text": "*backstage-plugins*"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'divider'
-        },
+          "type": "mrkdwn",
+          "text": "'$github_data_b'"
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": '*backstage-plugins*'
-                }
-            ]
-        },
+          "type": "mrkdwn",
+          "text": "*backstage-operator*"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": "'$github_data_b'"
-                },
-            ]
-        },
+          "type": "mrkdwn",
+          "text": "'$github_data_c'"
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'divider'
-        },
+          "type": "mrkdwn",
+          "text": "*janus-idp.github.io*"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": '*backstage-operator*'
-                   
-                }
-            ]
-        },
+          "type": "mrkdwn",
+          "text": "'$github_data_d'"
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": "'$github_data_c'"
-                },
-            ]
-        },
+          "type": "mrkdwn",
+          "text": "*janus-idp.github.io*"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
         {
-            "type": 'divider'
-        },
-        {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": '*janus-idp.github.io*'
-                }
-            ]
-        },
-        {
-            "type": 'section',
-            "fields": [
-                {
-                    "type": 'mrkdwn',
-                    "text": "'$github_data_d'"
-                },
-            ]
-        },
-        {
-            "type": 'divider'
-        },
-        {
-            "type": "section",
-            "fields": [
-                {
-                "type": "mrkdwn",
-                text: "*red-hat-developers-documentation-rhdh*",
-                },
-            ],
-        },
-        {
-            "type": "section",
-            "fields": [
-                {
-                "type": "mrkdwn",
-                text: "'$github_data_e'",
-                },
-            ],
-        },
-        {
-            "type": "divider",
-        },
-    ]
+          "type": "mrkdwn",
+          "text": "'$github_data_d'"
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    }
+  ]
 }'
 
 curl -X POST -H "Content-type:application/json" --data "$data" $1
