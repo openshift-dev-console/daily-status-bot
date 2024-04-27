@@ -130,7 +130,7 @@ data='{
       "fields": [
         {
           "type": "mrkdwn",
-          "text": "*janus-idp.github.io*"
+          "text": "*red-hat-developers-documentation-rhdh*"
         }
       ]
     },
@@ -139,7 +139,7 @@ data='{
       "fields": [
         {
           "type": "mrkdwn",
-          "text": "'$github_data_d'"
+          "text": "'$github_data_e'"
         }
       ]
     },
