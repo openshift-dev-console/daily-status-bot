@@ -1,0 +1,28 @@
+name: Daily Node.js Script
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push events to the main branch
+  workflow_dispatch:  # Allow manual triggering of the workflow
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Run script
+      run: |
+        cd devconsole
+        node devconsole-workflow.js
