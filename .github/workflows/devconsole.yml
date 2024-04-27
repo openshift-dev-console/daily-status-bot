@@ -1,4 +1,4 @@
-name: Daily Node.js Script
+name: ODC Daily JIRA Status
 
 on:
   push:
@@ -15,4 +15,4 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Run Bash Script
-      run: bash devconsole/odc.sh ${{ secrets.JIRA_PAT }} ${{ secrets.PERSONAL_SLACK_HOOK }}
+      run: bash devconsole/forum-devconsole.sh ${{ secrets.JIRA_PAT }} ${{ secrets.PERSONAL_SLACK_HOOK }}
