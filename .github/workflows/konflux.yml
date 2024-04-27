@@ -1,10 +1,7 @@
 name: Konflux Daily JIRA Status
 
 on:
-  push:
-    paths:
-      - 'konflux/**'
-    # Trigger on a cron schedule (every weekday at 10:00 AM IST)
+  # Trigger on a cron schedule (every weekday at 10:00 AM IST)
   schedule:
     - cron: '30 4 * * 1-5'   # Adjusted for 10:00 AM IST in UTC
   workflow_dispatch:  # Allow manual triggering of the workflow
