@@ -3,7 +3,7 @@ const process = require("process");
 const SLACK_URL = process.env.PERSONAL_SLACK_HOOK;
 const JIRA_AUTH = process.env.JIRA_PAT;
 
-export const fetchCount = (apiUrl, github = false) => {
+const fetchCount = (apiUrl, github = false) => {
   return fetch(apiUrl, {
     headers: {
       ...(!github ? { Authorization: JIRA_AUTH } : {}),
