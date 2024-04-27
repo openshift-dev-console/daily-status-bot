@@ -7,9 +7,10 @@ For each project, there are separate directories created. In each directory, the
 **To add this bot in a new channel/project:**
 1. Create a new directory
 2. Place the Bash script inside the directory
-3. Create an Actions workflow file for the new project/channel.
+3. Add the Slack Webhook & Jira PAT in the Actions Repository Secret
+4. Create an Actions workflow file for the new project/channel and reference the secrets. 
 
-Note: The Actions Workflow remain same for all bots. Only the names and directories have to be updated.
+Note: The Actions Workflow remain same for all bots. Only the names, secret_refs and directories have to be updated.
 
 ### Projects currently monitored:
 - Openshift Developer Console
