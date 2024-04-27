@@ -140,15 +140,7 @@ data='{
 				{
 					"type": "mrkdwn",
 					"text": "'$github_data_b'"
-				},
-                {
-					"type": "mrkdwn",
-					"text": "'$github_data_c'"
-				},
-                {
-					"type": "mrkdwn",
-					"text": "'$github_data_d'"
-				},
+				}
 			]
 		},
 		{
