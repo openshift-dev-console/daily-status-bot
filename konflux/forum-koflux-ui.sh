@@ -4,7 +4,6 @@ authorization="Authorization: Bearer "$1
 
 echo "Generating Status Report"
 
-# head="HELLO @hac-dev-team"
 head='RHTAP UI' 
 
 echo "Fetching RHTAP stories"
