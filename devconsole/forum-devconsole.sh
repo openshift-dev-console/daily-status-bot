@@ -11,11 +11,11 @@ echo "Fetching ODC stories"
 odc_stories="\n*UI Stories*"
 
 # Stories Done
-odc_stories+="\n1. <https://issues.redhat.com/browse/ODC-7566?filter=12435231 | Stories Done: > $(curl -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12435231' -H "Accept: application/json" | jq '.total')"
+odc_stories+="\n1. <https://issues.redhat.com/issues/?filter=12435231 | Stories Done: > $(curl -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12435231' -H "Accept: application/json" | jq '.total')"
 
 
 # Stories in Review
-odc_stories+="\n2. <https://issues.redhat.com/browse/ODC-7557?filter=12435230 | Stories In Review: > $(curl -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12435230' -H "Accept: application/json" | jq '.total')"
+odc_stories+="\n2. <https://issues.redhat.com/issues/?filter=12435230 | Stories In Review: > $(curl -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12435230' -H "Accept: application/json" | jq '.total')"
 
 
 # Unassigned Stories
@@ -55,7 +55,7 @@ fi
 
 
 open_bugs=$(curl -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12435237' -H "Accept: application/json" | jq '.total')
-odc_bugs+="\n5. <https://issues.redhat.com/browse/OCPBUGS-32697?filter=12435237 | Open Bug count: > $(curl -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12435237' -H "Accept: application/json" | jq '.total')"
+odc_bugs+="\n5. <https://issues.redhat.com/issues/?filter=12435237 | Open Bug count: > $(curl -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12435237' -H "Accept: application/json" | jq '.total')"
 if [ $open_bugs -ge 40 ]; then
     odc_bugs+=" :fire::fire:"
 fi
