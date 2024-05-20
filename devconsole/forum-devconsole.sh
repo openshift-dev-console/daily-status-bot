@@ -90,6 +90,8 @@ github_data_c="\n<https://github.com/search?q=repo%3Aopenshift%2Fconsole+repo%3A
 #PRs without QE-Approval
 github_data_c+="\n<https://github.com/search?q=repo%3Aopenshift%2Fconsole+repo%3Aopenshift-pipelines%2Fconsole-plugin++repo%3Aopenshift%2Fenhancements+repo%3Aopenshift%2Fconsole-operator+repo%3Aopenshift%2Fapi+label%3Algtm+label%3Aapproved+-label%3Ajira%2Fvalid-bug+-label%3Aqe-approved+author%3Arohitkrai03+author%3Adebsmita1+author%3Ajeff-phillips-18+author%3AinvincibleJai+author%3Asahil143+author%3Avikram-raj+author%3Achristianvogt+author%3Ajerolimov+author%3Ayozaam+author%3AdivyanshiGupta+author%3Arottencandy+author%3Akarthikjeeyar+author%3Aabhinandan13jan+state%3Aopen+author%3ALucifergene+author%3Agruselhaus+author%3Alokanandaprabhu&type=pullrequests&ref=advsearch | PRs without QE-Approval >:  $(curl -s 'https://api.github.com/search/issues?q=repo%3Aopenshift%2Fconsole+repo%3Aopenshift-pipelines%2Fconsole-plugin++repo%3Aopenshift%2Fenhancements+repo%3Aopenshift%2Fconsole-operator+repo%3Aopenshift%2Fapi+label%3Algtm+label%3Aapproved+-label%3Ajira%2Fvalid-bug+-label%3Aqe-approved+author%3Arohitkrai03+author%3Adebsmita1+author%3Ajeff-phillips-18+author%3AinvincibleJai+author%3Asahil143+author%3Avikram-raj+author%3Achristianvogt+author%3Ajerolimov+author%3Ayozaam+author%3AdivyanshiGupta+author%3Arottencandy+author%3Akarthikjeeyar+author%3Aabhinandan13jan+state%3Aopen+author%3ALucifergene+author%3Agruselhaus+author%3Alokanandaprabhu&type=pullrequests&ref=advsearch' -H "Accept: application/json" | jq '.total_count' )"
 
+#PRs with jira/invalid label
+github_data_d="\n<https://github.com/search?q=repo%3Aopenshift%2Fconsole+repo%3Aopenshift-pipelines%2Fconsole-plugin+label%3Ajira%2Finvalid-bug++author%3Arohitkrai03+author%3Adebsmita1+author%3AinvincibleJai+author%3Asahil143+author%3Avikram-raj+author%3Ajerolimov+author%3AdivyanshiGupta+author%3Akarthikjeeyar+author%3Aabhinandan13jan+state%3Aopen+author%3ALucifergene+author%3Aopenshift-cherrypick-robot+assignee%3Arohitkrai03+assignee%3Adebsmita1+assignee%3AinvincibleJai+assignee%3Asahil143+assignee%3Avikram-raj+assignee%3Ajerolimov+assignee%3AdivyanshiGupta+assignee%3Akarthikjeeyar+assignee%3Aabhinandan13jan+assignee%3ALucifergene+author%3Alokanandaprabhu+assignee%3Alokanandaprabhu+assignee%3Asanketpathak++-assignee%3Arhamilto++-assignee%3Asg00dwin+-assignee%3Ajhadvig+-assignee%3Astlaz&type=pullrequests&ref=advsearch | PRs with Jira invalid bug label >: $(curl -s 'https://api.github.com/search/issues?q=repo%3Aopenshift%2Fconsole+repo%3Aopenshift-pipelines%2Fconsole-plugin+label%3Ajira%2Finvalid-bug++author%3Arohitkrai03+author%3Adebsmita1+author%3AinvincibleJai+author%3Asahil143+author%3Avikram-raj+author%3Ajerolimov+author%3AdivyanshiGupta+author%3Akarthikjeeyar+author%3Aabhinandan13jan+state%3Aopen+author%3ALucifergene+author%3Aopenshift-cherrypick-robot+assignee%3Arohitkrai03+assignee%3Adebsmita1+assignee%3AinvincibleJai+assignee%3Asahil143+assignee%3Avikram-raj+assignee%3Ajerolimov+assignee%3AdivyanshiGupta+assignee%3Akarthikjeeyar+assignee%3Aabhinandan13jan+assignee%3ALucifergene+author%3Alokanandaprabhu+assignee%3Alokanandaprabhu+assignee%3Asanketpathak++-assignee%3Arhamilto++-assignee%3Asg00dwin+-assignee%3Ajhadvig+-assignee%3Astlaz&type=pullrequests&ref=advsearch' -H "Accept: application/json" | jq '.total_count' )"
 
 
 echo "Posting on #forum-devconsole slack channel"
@@ -155,7 +157,11 @@ data='{
                 {
 					"type": "mrkdwn",
 					"text": "'$github_data_c'"
-				}
+				},
+				                {
+					"type": "mrkdwn",
+					"text": "'$github_data_d'"
+				},
 			]
 		},
 		{
