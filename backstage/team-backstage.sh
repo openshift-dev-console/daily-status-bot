@@ -10,6 +10,7 @@ echo "Fetching Github datas"
 
 url1="https://api.github.com/search/issues?q=repo%3Ajanus-idp%2Fbackstage-showcase+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT&type=Issues"
 url2="https://api.github.com/search/issues?q=repo%3Ajanus-idp%2Fbackstage-plugins+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT&type=Issues"
+url3="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-operator+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT&type=Issues"
 url4="https://api.github.com/search/issues?q=repo%3Ajanus-idp%2Fjanus-idp.github.io+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT&type=Issues"
 url5="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Fred-hat-developers-documentation-rhdh+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT&type=Issues"
 
@@ -18,6 +19,9 @@ github_data_a+="\n<https://github.com/search?q=repo%3Ajanus-idp%2Fbackstage-show
 
 github_data_b="\n<https://github.com/search?l=&q=repo%3Ajanus-idp%2Fbackstage-plugins+state%3Aopen+type%3Apr | Total open PRs>: $(curl -s 'https://api.github.com/search/issues?q=repo%3Ajanus-idp%2Fbackstage-plugins+state%3Aopen+type%3Apr' -H "Accept: application/json" | jq '.total_count // 0')"
 github_data_b+="\n<https://github.com/search?q=repo%3Ajanus-idp%2Fbackstage-plugins+state%3Aopen+type%3Apr+created%3A%3C$PREVIOUS_DT&type=Issues | PRs opened for more than a week>: $(curl -s $url2 -H "Accept: application/json" | jq '.total_count // 0')"
+
+github_data_c="\n<https://github.com/search?l=&q=repo%3Aredhat-developer%2Frhdh-operator+state%3Aopen+type%3Apr | Total open PRs>: $(curl -s 'https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-operator+state%3Aopen+type%3Apr' -H "Accept: application/json" | jq '.total_count // 0')"
+github_data_c+="\n<https://github.com/search?q=repo%3Aredhat-developer%2Frhdh-operator+state%3Aopen+type%3Apr+created%3A%3C$PREVIOUS_DT&type=Issues | PRs opened for more than a week>: $(curl -s $url3 -H "Accept: application/json" | jq '.total_count // 0')"
 
 github_data_d="\n<https://github.com/search?l=&q=repo%3Ajanus-idp%2Fjanus-idp.github.io+state%3Aopen+type%3Apr | Total open PRs>: $(curl -s 'https://api.github.com/search/issues?q=repo%3Ajanus-idp%2Fjanus-idp.github.io+state%3Aopen+type%3Apr' -H "Accept: application/json" | jq '.total_count // 0')"
 github_data_d+="\n<https://github.com/search?q=repo%3Ajanus-idp%2Fjanus-idp.github.io+state%3Aopen+type%3Apr+created%3A%3C$PREVIOUS_DT&type=Issues | PRs opened for more than a week>: $(curl -s $url4 -H "Accept: application/json" | jq '.total_count // 0')"
@@ -73,6 +77,27 @@ data='{
         {
           "type": "mrkdwn",
           "text": "'$github_data_b'"
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*rhdh-operator*"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "'$github_data_c'"
         }
       ]
     },
