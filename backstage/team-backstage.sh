@@ -174,6 +174,6 @@ data='{
   ]
 }'
 
-curl -X POST -H "Content-type:application/json" --data "$data" $1
+curl -X POST -H "Content-type:application/json" --data "$data" https://hooks.slack.com/services/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
 
 echo "\nDone"
