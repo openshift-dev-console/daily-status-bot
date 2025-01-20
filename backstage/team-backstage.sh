@@ -46,7 +46,7 @@ data='{
       "fields": [
         {
           "type": "mrkdwn",
-          "text": "*backstage-showcase*"
+          "text": "*rhdh*"
         }
       ]
     },
