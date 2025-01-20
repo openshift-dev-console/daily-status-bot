@@ -31,7 +31,7 @@ github_data_e="\n<https://github.com/search?l=&q=repo%3Aredhat-developer%2Fred-h
 github_data_e+="\n<https://github.com/search?q=repo%3Aredhat-developer%2Fred-hat-developers-documentation-rhdh+state%3Aopen+type%3Apr+created%3A%3C$PREVIOUS_DT&type=Issues | PRs opened for more than a week>: $(curl -s $url5 -H "Accept: application/json" | jq '.total_count // 0')"
 
 github_data_f="\n<https://github.com/search?l=&q=repo%3Aredhat-developer%2Frhdh-chart+state%3Aopen+type%3Apr | Total open PRs>: $(curl -s 'https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-chart+state%3Aopen+type%3Apr' -H "Accept: application/json" | jq '.total_count // 0')"
-github_data_d+="\n<https://github.com/search?q=repo%3Aredhat-developer%2Frhdh-chart+state%3Aopen+type%3Apr+created%3A%3C$PREVIOUS_DT&type=Issues | PRs opened for more than a week>: $(curl -s $url4 -H "Accept: application/json" | jq '.total_count // 0')"
+github_data_f+="\n<https://github.com/search?q=repo%3Aredhat-developer%2Frhdh-chart+state%3Aopen+type%3Apr+created%3A%3C$PREVIOUS_DT&type=Issues | PRs opened for more than a week>: $(curl -s $url4 -H "Accept: application/json" | jq '.total_count // 0')"
 
 echo "Posting on slack"
 
