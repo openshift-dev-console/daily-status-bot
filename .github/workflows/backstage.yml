@@ -15,4 +15,4 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Run Bash Script
-      run: bash backstage/team-backstage.sh https://hooks.slack.com/services/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
+      run: bash backstage/team-backstage.sh https://hooks.slack.com/services/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
