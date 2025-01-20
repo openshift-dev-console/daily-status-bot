@@ -172,7 +172,7 @@ data='{
       "type": "divider"
     }
   ]
-}
+}'
 
 curl -X POST -H "Content-type:application/json" --data "$data" $1
 echo "\nDone"
