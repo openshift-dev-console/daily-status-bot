@@ -83,73 +83,73 @@ github_data+="\n5. <https://github.com/search?q=$base_params&type=pullrequests |
 
 echo "Posting on #rhdh-ux-ui slack channel"
 
-# Escape variables for JSON using jq to prevent invalid_blocks errors
-head_escaped=$(echo "$head" | jq -Rs .)
-stories_escaped=$(echo "$rhdh_ui_stories" | jq -Rs .)
-bugs_escaped=$(echo "$rhdh_bugs" | jq -Rs .)
-github_escaped=$(echo "$github_data" | jq -Rs .)
-
-data='{
-  "text": "Status report",
-  "blocks": [
-		{
-			"type": "header",
-			"text": {
-				"type": "plain_text",
-				"text": '$head_escaped'
-			}
-		},
-        {
-			"type": "section",
-			"fields": [
-				{
-					"type": "mrkdwn",
-					"text": "*Current sprint status*"
-				}
-			]
-		},
-        {
-            "type":"divider",
-        },
-		{
-			"type": "section",
-			"fields": [
-				{
-					"type": "mrkdwn",
-					"text": '$stories_escaped'
-				},
-				{
-					"type": "mrkdwn",
-					"text": '$bugs_escaped'
-				}
-			]
-		},
-        {
-            "type":"divider",
-        },
-        {
-			"type": "section",
-			"fields": [
-				{
-					"type": "mrkdwn",
-					"text": "*Github status*"
-				}
-			]
-		},
-		{
-			"type": "section",
-			"fields": [
-				{
-					"type": "mrkdwn",
-					"text": '$github_escaped'
-				}
-			]
-		},
-		{
-            "type":"divider",
-        },
-	]
-}'
+# Build JSON using jq to ensure proper escaping and valid structure
+data=$(jq -n \
+  --arg head "$head" \
+  --arg stories "$rhdh_ui_stories" \
+  --arg bugs "$rhdh_bugs" \
+  --arg github "$github_data" \
+  '{
+    text: "Status report",
+    blocks: [
+      {
+        type: "header",
+        text: {
+          type: "plain_text",
+          text: $head
+        }
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: "*Current sprint status*"
+          }
+        ]
+      },
+      {
+        type: "divider"
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: $stories
+          },
+          {
+            type: "mrkdwn",
+            text: $bugs
+          }
+        ]
+      },
+      {
+        type: "divider"
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: "*Github status*"
+          }
+        ]
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: $github
+          }
+        ]
+      },
+      {
+        type: "divider"
+      }
+    ]
+  }')
 
 curl -X POST -H "Content-type:application/json" --data "$data" $2
 
