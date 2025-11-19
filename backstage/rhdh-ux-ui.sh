@@ -83,6 +83,12 @@ github_data+="\n5. <https://github.com/search?q=$base_params&type=pullrequests |
 
 echo "Posting on #rhdh-ux-ui slack channel"
 
+# Escape variables for JSON using jq to prevent invalid_blocks errors
+head_escaped=$(echo "$head" | jq -Rs .)
+stories_escaped=$(echo "$rhdh_ui_stories" | jq -Rs .)
+bugs_escaped=$(echo "$rhdh_bugs" | jq -Rs .)
+github_escaped=$(echo "$github_data" | jq -Rs .)
+
 data='{
   "text": "Status report",
   "blocks": [
@@ -90,7 +96,7 @@ data='{
 			"type": "header",
 			"text": {
 				"type": "plain_text",
-				"text": "'$head'"
+				"text": '$head_escaped'
 			}
 		},
         {
@@ -110,11 +116,11 @@ data='{
 			"fields": [
 				{
 					"type": "mrkdwn",
-					"text": "'$rhdh_ui_stories'"
+					"text": '$stories_escaped'
 				},
 				{
 					"type": "mrkdwn",
-					"text": "'$rhdh_bugs'"
+					"text": '$bugs_escaped'
 				}
 			]
 		},
@@ -135,7 +141,7 @@ data='{
 			"fields": [
 				{
 					"type": "mrkdwn",
-					"text": "'$github_data'"
+					"text": '$github_escaped'
 				}
 			]
 		},
