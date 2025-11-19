@@ -83,12 +83,22 @@ github_data+="\n5. <https://github.com/search?q=$base_params&type=pullrequests |
 
 echo "Posting on #rhdh-ux-ui slack channel"
 
+# Convert \n escape sequences to actual newlines before passing to jq
+# This ensures jq properly escapes them in JSON (as \n, not \\n)
+head_processed=$(printf '%b' "$head")
+stories_processed=$(printf '%b' "$rhdh_ui_stories")
+bugs_processed=$(printf '%b' "$rhdh_bugs")
+github_processed=$(printf '%b' "$github_data")
+
+# Remove leading newline from header (Slack headers don't need it)
+head_processed=$(echo "$head_processed" | sed '1s/^\n//')
+
 # Build JSON using jq to ensure proper escaping and valid structure
 data=$(jq -n \
-  --arg head "$head" \
-  --arg stories "$rhdh_ui_stories" \
-  --arg bugs "$rhdh_bugs" \
-  --arg github "$github_data" \
+  --arg head "$head_processed" \
+  --arg stories "$stories_processed" \
+  --arg bugs "$bugs_processed" \
+  --arg github "$github_processed" \
   '{
     text: "Status report",
     blocks: [
