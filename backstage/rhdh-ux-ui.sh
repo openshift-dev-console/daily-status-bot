@@ -151,7 +151,54 @@ data=$(jq -n \
     ]
   }')
 
-curl -X POST -H "Content-type:application/json" --data "$data" $2
+# Validate JSON before sending
+if ! echo "$data" | jq empty 2>/dev/null; then
+    echo "ERROR: Invalid JSON generated!"
+    echo "$data" | jq . 2>&1 || echo "$data"
+    exit 1
+fi
+
+# Check for empty or null values that might cause issues
+if echo "$data" | jq -e '.blocks[] | select(.type == "section") | .fields[]? | select(.text == null or .text == "")' > /dev/null 2>&1; then
+    echo "WARNING: Found empty text fields in blocks"
+fi
+
+# Save payload for debugging (only in CI, won't affect production)
+if [ -n "$GITHUB_ACTIONS" ] || [ -n "$CI" ]; then
+    echo "$data" > /tmp/slack_payload.json 2>/dev/null || true
+    echo "Debug: Payload saved to /tmp/slack_payload.json"
+    echo "Debug: Payload size: $(echo "$data" | wc -c) bytes"
+    echo "Debug: Number of blocks: $(echo "$data" | jq '.blocks | length')"
+fi
+
+# Send to Slack and capture response
+response=$(curl -s -w "\n%{http_code}" -X POST -H "Content-type:application/json" --data "$data" $2)
+http_code=$(echo "$response" | tail -n1)
+body=$(echo "$response" | sed '$d')
+
+# Check response
+if [ "$http_code" != "200" ]; then
+    echo "ERROR: Slack API returned HTTP $http_code"
+    echo "Response body: $body"
+    if [ -n "$GITHUB_ACTIONS" ] || [ -n "$CI" ]; then
+        echo "Debug: Full payload saved to /tmp/slack_payload.json"
+        echo "Debug: Payload preview (first 500 chars):"
+        echo "$data" | head -c 500
+        echo ""
+    fi
+    exit 1
+fi
+
+# Check for error in response body
+if echo "$body" | jq -e '.ok == false' > /dev/null 2>&1; then
+    error=$(echo "$body" | jq -r '.error // "unknown error"')
+    echo "ERROR: Slack API error: $error"
+    if echo "$body" | jq -e '.response_metadata' > /dev/null 2>&1; then
+        echo "Response metadata:"
+        echo "$body" | jq '.response_metadata'
+    fi
+    exit 1
+fi
 
 
 echo "\nDone"
