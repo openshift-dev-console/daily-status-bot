@@ -83,132 +83,166 @@ github_data+="\n5. <https://github.com/search?q=$base_params&type=pullrequests |
 
 echo "Posting on #rhdh-ux-ui slack channel"
 
-# Convert \n escape sequences to actual newlines before passing to jq
-# This ensures jq properly escapes them in JSON (as \n, not \\n)
-head_processed=$(printf '%b' "$head")
-stories_processed=$(printf '%b' "$rhdh_ui_stories")
-bugs_processed=$(printf '%b' "$rhdh_bugs")
-github_processed=$(printf '%b' "$github_data")
+# Debug: Check variable lengths and content
+echo "Debug: Variable checks"
+echo "  head length: ${#head}"
+echo "  rhdh_ui_stories length: ${#rhdh_ui_stories}"
+echo "  rhdh_bugs length: ${#rhdh_bugs}"
+echo "  github_data length: ${#github_data}"
 
-# Remove leading newline from header (Slack headers don't need it)
-head_processed=$(echo "$head_processed" | sed '1s/^\n//')
+# Check for empty or null values
+if [ -z "$rhdh_ui_stories" ] || [ "$rhdh_ui_stories" = "null" ]; then
+    echo "WARNING: rhdh_ui_stories is empty or null"
+    rhdh_ui_stories="\n*UI Stories*\n(No data available)"
+fi
 
-# Build JSON using jq to ensure proper escaping and valid structure
-data=$(jq -n \
-  --arg head "$head_processed" \
-  --arg stories "$stories_processed" \
-  --arg bugs "$bugs_processed" \
-  --arg github "$github_processed" \
-  '{
-    text: "Status report",
-    blocks: [
-      {
-        type: "header",
-        text: {
-          type: "plain_text",
-          text: $head
-        }
-      },
-      {
-        type: "section",
-        fields: [
-          {
-            type: "mrkdwn",
-            text: "*Current sprint status*"
-          }
-        ]
-      },
-      {
-        type: "divider"
-      },
-      {
-        type: "section",
-        fields: [
-          {
-            type: "mrkdwn",
-            text: $stories
-          },
-          {
-            type: "mrkdwn",
-            text: $bugs
-          }
-        ]
-      },
-      {
-        type: "divider"
-      },
-      {
-        type: "section",
-        fields: [
-          {
-            type: "mrkdwn",
-            text: "*Github status*"
-          }
-        ]
-      },
-      {
-        type: "section",
-        fields: [
-          {
-            type: "mrkdwn",
-            text: $github
-          }
-        ]
-      },
-      {
-        type: "divider"
+if [ -z "$rhdh_bugs" ] || [ "$rhdh_bugs" = "null" ]; then
+    echo "WARNING: rhdh_bugs is empty or null"
+    rhdh_bugs="\n*Bugs:*\n(No data available)"
+fi
+
+if [ -z "$github_data" ] || [ "$github_data" = "null" ]; then
+    echo "WARNING: github_data is empty or null"
+    github_data="\n*Github status*\n(No data available)"
+fi
+
+head="RHDH UI Sprint Status:"
+
+data='{
+  "text": "Status report",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "'"$head"'"
       }
-    ]
-  }')
+    },
+    {
+      "type": "section",
+      "fields": [
+        { "type": "mrkdwn", "text": "*Current sprint status*" }
+      ]
+    },
+    { "type": "divider" },
+    {
+      "type": "section",
+      "fields": [
+        { "type": "mrkdwn", "text": "'"$rhdh_ui_stories"'" },
+        { "type": "mrkdwn", "text": "'"$rhdh_bugs"'" }
+      ]
+    },
+    { "type": "divider" },
+    {
+      "type": "section",
+      "fields": [
+        { "type": "mrkdwn", "text": "*Github status*" }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
+        { "type": "mrkdwn", "text": "'"$github_data"'" }
+      ]
+    },
+    { "type": "divider" }
+  ]
+}'
 
 # Validate JSON before sending
+echo "Debug: Validating JSON structure"
 if ! echo "$data" | jq empty 2>/dev/null; then
     echo "ERROR: Invalid JSON generated!"
-    echo "$data" | jq . 2>&1 || echo "$data"
+    echo "JSON validation error:"
+    echo "$data" | jq . 2>&1 | head -20
     exit 1
 fi
 
-# Check for empty or null values that might cause issues
-if echo "$data" | jq -e '.blocks[] | select(.type == "section") | .fields[]? | select(.text == null or .text == "")' > /dev/null 2>&1; then
-    echo "WARNING: Found empty text fields in blocks"
+# Check for problematic patterns in JSON
+echo "Debug: Checking for problematic patterns"
+if echo "$data" | grep -q '\\\\n'; then
+    echo "ERROR: Found double backslash (\\\\n) in JSON - this will cause invalid_blocks"
+    echo "$data" | grep -o '\\\\n' | head -3
+    exit 1
 fi
 
-# Save payload for debugging (only in CI, won't affect production)
+# Check field text lengths (Slack limit is 3000 chars per field)
+echo "Debug: Checking field text lengths"
+stories_len=$(echo "$data" | jq -r '.blocks[3].fields[0].text' | wc -c)
+bugs_len=$(echo "$data" | jq -r '.blocks[3].fields[1].text' | wc -c)
+github_len=$(echo "$data" | jq -r '.blocks[5].fields[0].text' | wc -c)
+
+echo "  Stories field: $stories_len chars (limit: 3000)"
+echo "  Bugs field: $bugs_len chars (limit: 3000)"
+echo "  Github field: $github_len chars (limit: 3000)"
+
+if [ $stories_len -gt 3000 ] || [ $bugs_len -gt 3000 ] || [ $github_len -gt 3000 ]; then
+    echo "ERROR: Field text exceeds Slack's 3000 character limit!"
+    exit 1
+fi
+
+# Save payload for debugging in CI
 if [ -n "$GITHUB_ACTIONS" ] || [ -n "$CI" ]; then
     echo "$data" > /tmp/slack_payload.json 2>/dev/null || true
     echo "Debug: Payload saved to /tmp/slack_payload.json"
     echo "Debug: Payload size: $(echo "$data" | wc -c) bytes"
     echo "Debug: Number of blocks: $(echo "$data" | jq '.blocks | length')"
+    echo "Debug: First 500 chars of payload:"
+    echo "$data" | head -c 500
+    echo ""
 fi
 
 # Send to Slack and capture response
+echo "Debug: Sending to Slack..."
 response=$(curl -s -w "\n%{http_code}" -X POST -H "Content-type:application/json" --data "$data" $2)
 http_code=$(echo "$response" | tail -n1)
 body=$(echo "$response" | sed '$d')
 
-# Check response
+# Check HTTP response code
 if [ "$http_code" != "200" ]; then
     echo "ERROR: Slack API returned HTTP $http_code"
     echo "Response body: $body"
+    
+    # Try to parse error details
+    if echo "$body" | jq -e '.error' > /dev/null 2>&1; then
+        error=$(echo "$body" | jq -r '.error')
+        echo "Slack error: $error"
+        
+        if echo "$body" | jq -e '.response_metadata' > /dev/null 2>&1; then
+            echo "Response metadata:"
+            echo "$body" | jq '.response_metadata'
+        fi
+    fi
+    
     if [ -n "$GITHUB_ACTIONS" ] || [ -n "$CI" ]; then
-        echo "Debug: Full payload saved to /tmp/slack_payload.json"
-        echo "Debug: Payload preview (first 500 chars):"
-        echo "$data" | head -c 500
+        echo "Debug: Full payload available at /tmp/slack_payload.json"
+        echo "Debug: Problematic fields preview:"
+        echo "Stories field (first 200 chars):"
+        echo "$data" | jq -r '.blocks[3].fields[0].text' | head -c 200
+        echo ""
+        echo "Bugs field (first 200 chars):"
+        echo "$data" | jq -r '.blocks[3].fields[1].text' | head -c 200
+        echo ""
+        echo "Github field (first 200 chars):"
+        echo "$data" | jq -r '.blocks[5].fields[0].text' | head -c 200
         echo ""
     fi
+    
     exit 1
 fi
 
-# Check for error in response body
+# Check for error in response body (even with 200 status)
 if echo "$body" | jq -e '.ok == false' > /dev/null 2>&1; then
     error=$(echo "$body" | jq -r '.error // "unknown error"')
-    echo "ERROR: Slack API error: $error"
+    echo "ERROR: Slack API returned error: $error"
     if echo "$body" | jq -e '.response_metadata' > /dev/null 2>&1; then
         echo "Response metadata:"
         echo "$body" | jq '.response_metadata'
     fi
     exit 1
 fi
+
+echo "Debug: Successfully posted to Slack"
 
 
 echo "\nDone"
