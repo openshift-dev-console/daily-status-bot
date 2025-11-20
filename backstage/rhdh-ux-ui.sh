@@ -106,4 +106,36 @@ if [ -n "$GITHUB_ACTIONS" ] || [ -n "$CI" ]; then
     echo ""
 fi
 
+# --- Send to Slack ---
+if [ -z "${2-}" ]; then
+  echo "ERROR: Missing Slack webhook URL as second arg"
+  exit 2
+fi
+
+response=$(curl -fSs -w "\n%{http_code}" \
+  -X POST \
+  -H "Content-type: application/json; charset=utf-8" \
+  --data "$data" \
+  "$2")
+
+http_code=$(echo "$response" | tail -n1)
+body=$(echo "$response" | sed '$d')
+
+if [ "$http_code" != "200" ]; then
+  echo "ERROR: Slack returned HTTP $http_code"
+  echo "Body: $body"
+  exit 1
+fi
+
+# For incoming webhooks Slack returns plain "ok"
+# For chat.postMessage it returns JSON with {"ok": true}
+if echo "$body" | grep -qx "ok"; then
+  echo "Posted to Slack: ok"
+elif echo "$body" | jq -e '.ok == true' >/dev/null 2>&1; then
+  echo "Posted to Slack: $(echo "$body" | jq -r '.ts // "ok"')"
+else
+  echo "WARNING: Unexpected Slack response:"
+  echo "$body"
+fi
+
 echo "\nDone"
