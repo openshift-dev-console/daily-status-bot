@@ -60,7 +60,7 @@ cherrypick_count=$(curl -fSs -S "https://api.github.com/search/issues?q=$cherryp
 no_lgtm_approved_count=$(curl -fSs -S "https://api.github.com/search/issues?q=$base_params+-label%3Algtm+label%3Aapproved&type=pullrequests" -H "Accept: application/json"|jq '.total_count')
 open_prs_count=$(curl -fSs -S "https://api.github.com/search/issues?q=$base_params&type=pullrequests" -H "Accept: application/json"|jq '.total_count')
 
-gh1="1. <https://github.com/search?q=$base_params+created%3A%3C$three_days_ago&type=pullrequests|PRs >3 days:> $count_gt3"
+gh1="1. <https://github.com/search?q=$base_params+created%3A%3C$three_days_ago&type=pullrequests|Opened for more than 3 days:> $count_gt3"
 gh2="2. <https://github.com/search?q=$base_params+-label%3Algtm&type=pullrequests|No LGTM:> $no_lgtm_count"
 gh3="3. <https://github.com/search?q=$base_params+-label%3Aapproved&type=pullrequests|No Approval:> $no_approval_count"
 gh4="4. <https://github.com/search?q=$base_params+-label%3Algtm+label%3Aapproved&type=pullrequests|Approved, no LGTM:> $no_lgtm_approved_count"
