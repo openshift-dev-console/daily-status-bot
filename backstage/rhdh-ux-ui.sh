@@ -11,39 +11,39 @@ echo "Fetching RHDH UI stories"
 rhdh_ui_stories="\n*UI Stories*"
 
 # Stories Done
-rhdh_ui_stories+="\n1. <https://issues.redhat.com/issues/?filter=12483583|Stories Done:> $(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483583' -H "Accept: application/json"|jq '.total')"
+rhdh_ui_stories+="\n1. <https://issues.redhat.com/issues/?filter=12483583|Stories Done:> $(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483583' -H "Accept: application/json"|jq '.total')"
 
 # Stories in Review
-rhdh_ui_stories+="\n2. <https://issues.redhat.com/issues/?filter=12483584|Stories In Review:> $(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483584' -H "Accept: application/json"|jq '.total')"
+rhdh_ui_stories+="\n2. <https://issues.redhat.com/issues/?filter=12483584|Stories In Review:> $(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483584' -H "Accept: application/json"|jq '.total')"
 
 # Unassigned Stories
-rhdh_ui_stories+="\n3. <https://issues.redhat.com/issues/?filter=12483586|Unassigned Stories:> $(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483586' -H "Accept: application/json"|jq '.total')"
+rhdh_ui_stories+="\n3. <https://issues.redhat.com/issues/?filter=12483586|Unassigned Stories:> $(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483586' -H "Accept: application/json"|jq '.total')"
 
 # Unpointed Stories
-rhdh_ui_stories+="\n4. <https://issues.redhat.com/issues/?filter=12483587|Unpointed Stories:> $(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483587' -H "Accept: application/json"|jq '.total')"
+rhdh_ui_stories+="\n4. <https://issues.redhat.com/issues/?filter=12483587|Unpointed Stories:> $(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483587' -H "Accept: application/json"|jq '.total')"
 
 echo "Fetching RHDH bugs"
 
 rhdh_bugs="\n*Bugs:*"
 
 # RHDHBUGS stories In Review
-rhdhbugs_review=$(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483589' -H "Accept: application/json"|jq '.total')
+rhdhbugs_review=$(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483589' -H "Accept: application/json"|jq '.total')
 rhdh_bugs+="\n1. <https://issues.redhat.com/issues/?filter=12483589|RHDHBUGS stories In Review:> $rhdhbugs_review"
 
 # RHDHSUPP stories In Review
-rhdhsupp_review=$(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483590' -H "Accept: application/json"|jq '.total')
+rhdhsupp_review=$(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483590' -H "Accept: application/json"|jq '.total')
 rhdh_bugs+="\n2. <https://issues.redhat.com/issues/?filter=12483590|RHDHSUPP stories In Review:> $rhdhsupp_review"
 
 # Unassigned RHDHBUGS stories
-rhdhbugs_unassigned=$(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483592' -H "Accept: application/json"|jq '.total')
+rhdhbugs_unassigned=$(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483592' -H "Accept: application/json"|jq '.total')
 rhdh_bugs+="\n3. <https://issues.redhat.com/issues/?filter=12483592|Unassigned RHDHBUGS stories:> $rhdhbugs_unassigned"
 
 # Unassigned RHDHSUPP stories
-rhdhsupp_unassigned=$(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483591' -H "Accept: application/json"|jq '.total')
+rhdhsupp_unassigned=$(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483591' -H "Accept: application/json"|jq '.total')
 rhdh_bugs+="\n4. <https://issues.redhat.com/issues/?filter=12483591|Unassigned RHDHSUPP stories:> $rhdhsupp_unassigned"
 
 # Open Bug count
-open_bugs=$(curl -fSs -H "$authorization" -s 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483593' -H "Accept: application/json"|jq '.total')
+open_bugs=$(curl -fSs -H "$authorization" 'https://issues.redhat.com/rest/api/2/search?jql=filter=12483593' -H "Accept: application/json"|jq '.total')
 rhdh_bugs+="\n5. <https://issues.redhat.com/issues/?filter=12483593|Open Bug count:> $open_bugs"
 
 
@@ -126,14 +126,6 @@ if ! echo "$data"|jq empty 2>/dev/null; then
     echo "ERROR: Invalid JSON generated!"
     echo "JSON validation error:"
     echo "$data" | jq . 2>&1 | head -20
-    exit 1
-fi
-
-# Check for problematic patterns in JSON
-echo "Debug: Checking for problematic patterns"
-if echo "$data" | grep -q '\\\\n'; then
-    echo "ERROR: Found double backslash (\\\\n) in JSON - this will cause invalid_blocks"
-    echo "$data" | grep -o '\\\\n' | head -3
     exit 1
 fi
 
