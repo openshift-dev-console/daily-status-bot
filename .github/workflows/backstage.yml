@@ -16,3 +16,6 @@ jobs:
       
     - name: Run Bash Script
       run: bash backstage/rhdh-ux-ui.sh ${{ secrets.JIRA_PAT }} ${{ secrets.RHDH_UX_UI_SLACK_HOOK }}
+
+    - name: Run Bash Script
+      run: bash backstage/team-backstage.sh ${{ secrets.TEAM_BACKSTAGE_SLACK_HOOK }}
