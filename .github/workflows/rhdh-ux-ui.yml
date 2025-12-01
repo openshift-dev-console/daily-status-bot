@@ -1,0 +1,18 @@
+name: RHDH UX UI Weekly JIRA Status
+
+on:
+  # Trigger on a cron schedule (every weekday at 4:00 PM IST)
+  schedule:
+    - cron: '30 10 * * 1'   # Adjusted for 4:00 PM IST in UTC
+  workflow_dispatch:  # Allow manual triggering of the workflow
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Run Bash Script
+      run: bash backstage/rhdh-ux-ui.sh ${{ secrets.JIRA_PAT }} ${{ secrets.RHDH_UX_UI_SLACK_HOOK }}
