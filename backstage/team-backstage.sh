@@ -11,17 +11,11 @@ PREVIOUS_DT=`date -d "7 days ago" +%F`
 echo "Fetching Github data"
 
 url1="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT"
-
 url2="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-operator+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT"
-
 url3="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-plugins+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT"
-
 url4="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Fred-hat-developers-documentation-rhdh+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT"
-
 url5="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-chart+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT"
-
 url6="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-local+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT"
-
 url7="https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh-must-gather+state%3Aopen+type%3Apr+created%3A<$PREVIOUS_DT"
 
 github_data_a="\n<https://github.com/search?q=repo%3Aredhat-developer%2Frhdh+state%3Aopen+type%3Apr | Total open PRs>: $(curl -s 'https://api.github.com/search/issues?q=repo%3Aredhat-developer%2Frhdh+state%3Aopen+type%3Apr' -H "Accept: application/json" | jq '.total_count // 0')"
